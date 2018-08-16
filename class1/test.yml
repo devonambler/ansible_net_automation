@@ -1,0 +1,40 @@
+---
+- name: When Testing
+  hosts: local
+  vars:
+    my_str: whatever
+    version: "Cisco IOS Running"
+
+  tasks:
+    - name: Hard-Coded to False
+      debug:
+        msg: Hello World is False
+      when: False
+    
+    - name: Hard-coded to True
+      debug:
+        msg: Hello World is True
+      when: True
+
+    - name: Testing string equality
+      debug:
+        msg: Hello World if string equality
+      when: my_str == 'whatever'
+
+    - name: Testing substring in larger string
+      debug:
+        msg: Found string
+      when: "'Cisco IOS' in version"
+
+    - name: This variable is defined
+      debug: 
+        msg: Variable defined
+      when: version is defined
+
+    - command: /bin/false
+      register: result
+      ignore_errors: True
+
+    - debug:
+        msg: "Hello world"
+      when: result|failed

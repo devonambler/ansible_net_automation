@@ -1,0 +1,45 @@
+---
+- name: Basic ios_facts module
+  gather_facts: no
+  hosts: cisco
+  vars:
+    creds:
+      host: "{{ ansible_host }}"
+      username: "{{ ansible_user }}" 
+      password: "{{ ansible_ssh_pass }}"
+
+  tasks:
+    - name: Gather Facts
+      ios_facts:
+        provider: "{{ creds }}"
+      tags:
+        - task1
+        - task2
+        - task3
+        - task4
+
+ 
+    - name: a. ansible_net_all_ipv4_addresses         [when the IP address is 10.220.88.21]
+      debug:
+        msg: "{{ ansible_net_all_ipv4_addresses }}"
+      when: "'10.220.88.21' in ansible_net_all_ipv4_addresses"
+      tags: task1 
+ 
+    - name: b. ansible_net_interfaces                        [only print out the interface names]  
+      debug:
+        msg: "{{ item.key }}"
+      with_dict: "{{ ansible_net_interfaces }}"
+      tags: task2 
+
+    - name: c. ansible_net_interfaces                        [only print out the interface names that are up]
+      debug:
+        msg: "{{ item.key }}"
+      with_dict: "{{ ansible_net_interfaces }}"
+      when: item.value.lineprotocol == 'up ' 
+      tags: task3 
+
+    - name: d. ansible_net_model                             [only when the model is a 881]
+      debug:
+        msg: "{{ ansible_net_model }}"
+      when: ansible_net_model == '881' 
+      tags: task4 

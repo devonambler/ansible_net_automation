@@ -1,0 +1,15 @@
+---
+- name: EOS static routes
+  hosts: arista
+  gather_facts: False
+  tasks:
+    - eos_config:
+       provider: "{{ creds_eapi }}"
+       lines:
+         - "vlan 800"
+         - "vlan 801"
+         - "vlan 802"
+         - "vlan 803"
+       before: ["no vlan 800-803"] 
+       replace: block
+       match: line

@@ -1,0 +1,36 @@
+---
+- name: EOS config change
+  hosts: pynet-sw5
+  tasks:
+    - eos_config:
+       provider: "{{ creds_eapi }}"
+       parents: "{{ loopback_add }}" 
+       lines: "{{ loopback_commands }}"
+       #before: "{{ loopback_del }}"
+       replace: line
+       match: line
+  tags: eos
+
+- name: IOS config change
+  hosts: pynet-rtr1
+  tasks:
+    - ios_config:
+       provider: "{{ creds }}"
+       parents: "{{ loopback_add }}" 
+       lines: "{{ loopback_commands }}"
+       #before: "{{ loopback_del }}"
+       replace: line
+       match: line
+  tags: ios
+
+- name: nxos config change
+  hosts: nxos1 
+  tasks:
+    - nxos_config:
+       provider: "{{ provider_ssh }}"
+       parents: "{{ loopback_add }}" 
+       lines: "{{ loopback_commands }}"
+       #before: "{{ loopback_del }}"
+       replace: line
+       match: line
+  tags: nxos

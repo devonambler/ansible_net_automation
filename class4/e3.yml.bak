@@ -1,0 +1,40 @@
+---
+- name: EOS config change
+  hosts: pynet-sw5
+  tasks:
+    - eos_config:
+       provider: "{{ creds_eapi }}"
+       parents: "{{ loopback_add}}" 
+       lines: "{{ loopback_commands }}"
+       before: "{{ loopback_del }}"
+       replace: line
+       match: line
+       tags: eos
+
+- name: IOS config change
+  hosts: pynet-rtr1
+  tasks:
+    - ios_config:
+        provider: "{{ creds }}"
+        parents: ["interface loopback 6"] 
+        lines:
+          - ip address 1.1.1.5/24 
+          - "ipv6 address 2001:db8::5O/32" 
+        before: ["no interface loopback 6"]
+        replace: line
+        match: line
+        tags: ios
+
+- name: nxos config change
+  hosts: nxos1 
+  tasks:
+    - nxos_config:
+        provider: "{{ provider_ssh }}"
+        parents: ["interface loopback 6"]
+        lines:
+          - ip address 1.1.1.5/24
+          - "ipv6 address 2001:db8::5O/32"
+        before: ["no interface loopback 6"]
+        replace: line
+        match: line
+        tags: nxos

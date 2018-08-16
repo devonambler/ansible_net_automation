@@ -1,0 +1,21 @@
+---
+
+- name: Simple ping
+  hosts: cisco
+  vars:
+    ntpserver1: 20.20.20.20
+    ntpserver2: 20.20.20.30
+  tasks:
+    - ping:
+    - debug:
+        msg: "{{ inventory_hostname }}"
+    - debug:
+        msg: "{{ ansible_host }}"
+    - debug:
+        msg: "{{ local_as_number }}"
+    - debug:
+        msg: "{{ remote_as_number }}"
+    - debug:
+        msg: "{{ ntpserver1 }}"
+    - debug:
+        msg: "{{ ntpserver2 }}"

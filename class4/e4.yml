@@ -1,0 +1,8 @@
+---
+- name: IOS SNMP
+  hosts: cisco
+  tasks:
+    - ios_config:
+       provider: "{{ creds }}"
+       lines: "{{ config_snmp }}"
+  tags: ios

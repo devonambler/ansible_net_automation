@@ -1,0 +1,9 @@
+---
+- name: Test Ping
+  hosts: nxos
+  tasks:
+    - name: Ping
+      nxos_ping:
+        provider: "{{ provider_ssh }}"
+        vrf: default
+        dest: "{{ ansible_host }}"
