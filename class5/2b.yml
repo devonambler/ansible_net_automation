@@ -1,0 +1,14 @@
+---
+- name: Exercise 1a
+  hosts: nxos 
+  tasks:
+    - name: Check IP interfaces
+      napalm_get_facts:
+        provider: "{{ creds }}"
+        filter: "interfaces_ip"
+    
+    - set_fact:
+        interface: "{{ napalm_interfaces_ip.Ethernet2/4 }}"
+
+    - assert:
+        that: interface.ipv4  == "10.1.1.10"

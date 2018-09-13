@@ -1,0 +1,8 @@
+---
+- name: NAPALM Get Config
+  hosts: pynet-rtr1
+  tasks:
+    - name: Get Config
+      napalm_get_facts:
+        provider: "{{ creds }}"
+        filter: "config"

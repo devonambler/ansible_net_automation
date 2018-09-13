@@ -1,0 +1,12 @@
+---
+
+- name: Read in file and set variable
+  hosts: cisco
+  vars: 
+    file_name: "./{{ inventory_hostname }}-show_version.txt"
+    contents: "{{ lookup('file', '{{ file_name }}') }}"
+
+
+  tasks: 
+    - debug:
+        msg: "Here it is:\n\n{{ contents }}"

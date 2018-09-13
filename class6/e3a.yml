@@ -1,0 +1,40 @@
+---
+- name: Configure NTP on nxos
+  hosts: nxos1
+  vars:
+    ntp_servers:
+      - "ntp server 10.1.1.1"
+      - "ntp server 10.1.1.2"
+    extra_ntp_servers_no: []
+
+  tasks:
+    - name: Configure NTP servers
+      nxos_config:
+        provider: "{{ provider_nxapi }}"
+        lines: " {{ ntp_servers }}"
+      tags: config
+
+    - name: Grab all configured ntp servers from show run output
+      nxos_command:
+        provider: "{{ provider_ssh }}"
+        commands: "show run | inc ntp"
+      register: output
+      tags: show
+
+    - name: fill a new var with register contents
+      set_fact:
+        current_ntp: "{{ output.stdout_lines[0] }}"
+
+    - name: Compare all configured servers with standard set from ntp_servers var
+      set_fact:
+        extra_ntp_servers: "{{ current_ntp | difference(ntp_servers) | list }}"
+
+    - name: "Construct the 'no ntp...' command to remove unneeded servers"
+      set_fact:
+        no_ntp_servers: "{{ lookup('template', './no_ntp_servers.j2') | from_yaml }}"
+
+    - name: Remove unneeded NTP servers
+      nxos_config:
+        provider: "{{ provider_nxapi }}"
+        lines: "{{ no_ntp_servers }}"
+      when: no_ntp_servers

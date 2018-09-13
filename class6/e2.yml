@@ -1,0 +1,20 @@
+---
+
+- name: Using Jinja2 templates
+  hosts: pynet-sw8
+  tasks:
+    - name: Get switching table
+      napalm_get_facts:
+        provider: "{{ creds }}"
+        filter: mac_address_table
+    
+    - name: print
+      debug:
+        msg: "{{ lookup('template', './e2_process_arp.j2') | from_yaml }}" 
+
+    - name: convert to data structure and set as variable
+      set_fact:
+        my_mac_table: "{{ lookup('template', './e2_process_arp.j2') | from_yaml }}"
+
+    - debug:
+        var: my_mac_table

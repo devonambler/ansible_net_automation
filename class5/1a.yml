@@ -1,0 +1,8 @@
+---
+- name: Exercise 1a
+  hosts: cisco
+  tasks:
+    - name: Get LLDP info
+      napalm_get_facts:
+        provider: "{{ creds }}"
+        filter: "lldp_neighbors"

@@ -1,0 +1,14 @@
+---
+- name: NAPALM Get Facts
+  hosts: cisco:arista:nxos:juniper
+  tasks:
+    - name: NAPALM Get
+      napalm_get_facts:
+        provider: "{{ creds }}"
+        filter: "config"
+        #filter: "arp_table,facts,interfaces,bgp_neighbors"
+    
+    - debug:
+        var: napalm_model
+    - debug:
+        var: napalm_os_version
